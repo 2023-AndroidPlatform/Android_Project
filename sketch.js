@@ -5,17 +5,19 @@ let sounds = [];
 let musicData = [];
 let iconImage = [];
 let resetButton;
+let testIcon;
+let volumeSlider, bpmSlider;
 
 function preload() {
   soundFormats("mp3", "ogg");
-  for (var i = 0; i < 36; i++) {
+  for (var i = 0; i < 57; i++) {
     if (i < 36) sounds[i] = loadSound(`sound/piano${i}.mp3`);
-    else sounds[i] = loadSound(`sound/effect${i}.mp3`);
+    else sounds[i] = loadSound(`sound/effect${i-if_effect}.mp3`);
   }
-  // 불러오는 파일명 수정 필요
-  // for (var j = 0; j < 36; j++){
-  //   iconImage[j] = loadImage(`이미지폴더명/이미지이름${j}.확장자`)
-  // }
+  for (var j = 0; j < 21; j++){
+    iconImage[j] = loadImage(`icons/icon${j}.png`);
+  }
+  testIcon = loadImage('icons/G.png');
 }
 
 function setup() {
@@ -39,14 +41,15 @@ function setup() {
   resetButton = createButton("RESET");
   resetButton.position(width*0.89, height*0.58);
   resetButton.mousePressed(reset);
+
+  volumeSlider = createSlider(0,1,0.2,0.1);
+  volumeSlider.position(width*0.9, 10);
+  volumeSlider.size(width*0.08);
+
+  // bpmSlider = createSlider()
 }
 
 function draw() {
-  // 이미지파일로 변경
-  for (var i = 0; i < musicData.length; i++){
-    fill(0);
-    ellipse(width*0.1 + i*(width*0.065), height*0.285, width*0.03, width*0.03);
-  }
 }
 
 function changeMode_piano() {
@@ -112,11 +115,12 @@ function soundPlay() {
   if (mouseX < windowWidth && mouseY > windowHeight - height / 3 && mouseY < windowHeight) {
     if (mainMode == true) changeMode_piano();
     else changeMode_soundEffect();
+    console.log(mode);
     sounds[mode].play();
-    sounds[mode].amp(1);
+    sounds[mode].amp(volumeSlider.value());
     if (musicData.length < 12){
       musicData.push(mode);
-      console.log(musicData);
+      musicDataIcon();
     }
   }
 }
@@ -136,4 +140,12 @@ function reset(){
   fill(230);
   rect(width *0.05, height/5, width * 0.82, height/6, 40);
   musicData.splice(0,musicData.length);
+}
+
+function musicDataIcon(){
+  if (mainMode == true){
+    image(testIcon, width*0.08 + (musicData.length-1)*(width*0.065), height*0.25, width*0.04, width*0.04);
+  }else{
+    image(iconImage[mode-if_effect], width*0.08 + (musicData.length-1)*(width*0.065), height*0.25, width*0.04, width*0.04)
+  }
 }
