@@ -1,16 +1,10 @@
 let mainMode = true;
 let mode = 0;
-
-// 추가한 부분
-// 그냥 보기 편하라고 해논거
-// 만약 effect모드라면 항상 mode에 36을 더해야 하는데 숫자 그대로 써 놓으면 지저분해서
 let if_effect = 36;
-
 let sounds = [];
 let musicData = [];
-// 추가한 부분
-// 아이콘 이미지 저장할 변수
 let iconImage = [];
+let resetButton;
 
 function preload() {
   soundFormats("mp3", "ogg");
@@ -18,12 +12,10 @@ function preload() {
     if (i < 36) sounds[i] = loadSound(`sound/piano${i}.mp3`);
     else sounds[i] = loadSound(`sound/effect${i}.mp3`);
   }
-  // 추가한 부분
-  // 이미지 불러와서 iconImage배열에 순서대로 저장
   // 불러오는 파일명 수정 필요
-  for (var j = 0; j < 36; j++){
-    iconImage[j] = loadImage(`이미지폴더명/이미지이름${j}.확장자`)
-  }
+  // for (var j = 0; j < 36; j++){
+  //   iconImage[j] = loadImage(`이미지폴더명/이미지이름${j}.확장자`)
+  // }
 }
 
 function setup() {
@@ -43,15 +35,18 @@ function setup() {
       rect(width / 42 + i * width / 21 + (width / 3)*2, height - height / 3, width / 21, height / 6, 0, 0, 10, 10);
     }
   }
-  noStroke()
-  fill(210)
-  rect(width *0.05+3, height/5+5, width * 0.82, height/6, 40)
-  fill(230)
-  rect(width *0.05, height/5, width * 0.82, height/6, 40)
+  reset();
+  resetButton = createButton("RESET");
+  resetButton.position(width*0.89, height*0.58);
+  resetButton.mousePressed(reset);
 }
 
 function draw() {
-
+  // 이미지파일로 변경
+  for (var i = 0; i < musicData.length; i++){
+    fill(0);
+    ellipse(width*0.1 + i*(width*0.065), height*0.285, width*0.03, width*0.03);
+  }
 }
 
 function changeMode_piano() {
@@ -120,7 +115,8 @@ function soundPlay() {
     sounds[mode].play();
     sounds[mode].amp(1);
     if (musicData.length < 12){
-      musicData.push(mode)
+      musicData.push(mode);
+      console.log(musicData);
     }
   }
 }
@@ -131,4 +127,13 @@ function mousePressed() {
 
 function mouseReleased() {
   sounds[mode].amp(0, 1);
+}
+
+function reset(){
+  noStroke()
+  fill(210);
+  rect(width *0.05+3, height/5+5, width * 0.82, height/6, 40);
+  fill(230);
+  rect(width *0.05, height/5, width * 0.82, height/6, 40);
+  musicData.splice(0,musicData.length);
 }
