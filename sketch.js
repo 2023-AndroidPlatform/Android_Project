@@ -3,10 +3,14 @@ let mode = 0;
 let if_effect = 36;
 let sounds = [];
 let musicData = [];
+let musicDataTime = [];
 let iconImage = [];
 let resetButton;
 let testIcon;
 let volumeSlider, bpmSlider;
+let musicPlayButton;
+let recorder, soundFile;
+let delay = 0;
 
 function preload() {
   soundFormats("mp3", "ogg");
@@ -38,15 +42,23 @@ function setup() {
     }
   }
   reset();
+
   resetButton = createButton("RESET");
   resetButton.position(width*0.89, height*0.58);
   resetButton.mousePressed(reset);
 
-  volumeSlider = createSlider(0,1,0.2,0.1);
+  volumeSlider = createSlider(0,1,1,0.1);
   volumeSlider.position(width*0.9, 10);
   volumeSlider.size(width*0.08);
 
-  // bpmSlider = createSlider()
+  bpmSlider = createSlider(0.4,0.8,0.6,0.2);
+  bpmSlider.position(width*0.9, 30);
+  bpmSlider.size(width*0.08);
+
+  // test
+  musicPlayButton = createButton("PLAY");
+  musicPlayButton.position(0,0);
+  musicPlayButton.mousePressed(musicPlay);
 }
 
 function draw() {
@@ -120,6 +132,9 @@ function soundPlay() {
     sounds[mode].amp(volumeSlider.value());
     if (musicData.length < 12){
       musicData.push(mode);
+      musicDataTime.push(bpmSlider.value());
+      console.log(musicData);
+      console.log(musicDataTime);
       musicDataIcon();
     }
   }
@@ -130,7 +145,8 @@ function mousePressed() {
 }
 
 function mouseReleased() {
-  sounds[mode].amp(0, 1);
+  sounds[mode].amp(0, bpmSlider.value());
+  sounds[mode].stop(bpmSlider.value());
 }
 
 function reset(){
@@ -140,6 +156,7 @@ function reset(){
   fill(230);
   rect(width *0.05, height/5, width * 0.82, height/6, 40);
   musicData.splice(0,musicData.length);
+  musicDataTime.splice(0,musicDataTime.length);
 }
 
 function musicDataIcon(){
@@ -148,4 +165,24 @@ function musicDataIcon(){
   }else{
     image(iconImage[mode-if_effect], width*0.08 + (musicData.length-1)*(width*0.065), height*0.25, width*0.04, width*0.04)
   }
+}
+
+function musicPlay(){
+  recorder = new p5.SoundRecorder();
+  recorder.setInput();
+
+  soundFile = new p5.SoundFile();
+
+  recorder.record(soundFile);
+  
+  for (let i = 0; i < musicData.length; i++){
+    sounds[musicData[i]].amp(volumeSlider.value());
+    sounds[musicData[i]].play(delay);
+    console.log("playing "+i);
+    sounds[musicData[i]].stop(delay+musicDataTime[i]);
+    delay = delay + musicDataTime[i];
+  }
+
+  recorder.stop();
+  delay = 0;
 }
