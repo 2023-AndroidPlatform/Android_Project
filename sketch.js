@@ -1,19 +1,17 @@
 let mainMode = true;
 let mode = 0;
-let button; //button 함수 추가-LGH
-let button2;
-// 추가한 부분
-// 그냥 보기 편하라고 해논거
-// 만약 effect모드라면 항상 mode에 36을 더해야 하는데 숫자 그대로 써 놓으면 지저분해서
+let pianoButton, effectButton, resetButton, musicPlayButton;
 let if_effect = 36;
-
 let sounds = [];
 let musicData = [];
-// 추가한 부분
-// 아이콘 이미지 저장할 변수
-let iconImage = [];
-
-//함수 추가 -LGH
+let musicDataTime = [];
+let musicDataIconImg = [];
+let keybordImg = [];
+let playImg, stopImg, resetImg, volumeImg, bpmImg, downloadImg;
+let octaveImg = [];
+let volumeSlider, bpmSlider;
+let recorder, soundFile;
+let delay = 0;
 
 function preload() {
   soundFormats("mp3", "ogg");
@@ -21,12 +19,34 @@ function preload() {
     if (i < 36) sounds[i] = loadSound(`sound/piano${i}.mp3`);
     else sounds[i] = loadSound(`sound/effect${i - if_effect}.mp3`);
   }
-  // 추가한 부분
-  // 이미지 불러와서 iconImage배열에 순서대로 저장
-  // 불러오는 파일명 수정 필요
-  //for (var j = 0; j < 36; j++){
-  //  iconImage[j] = loadImage(`이미지폴더명/이미지이름${j}.확장자`)
-  //}
+  // musicData 아이콘
+  for (var i = 0; i < 42; i++){
+    musicDataIconImg[i] = loadImage(`icons/icon${i}.png`);
+  }
+  // piano 위에 넣을 아이콘 - effect
+  for (var i = 0; i < 21; i++){
+    keybordImg[i] = loadImage(`pianoImg/img${i}.png`);
+  }
+  // piano 위에 넣을 아이콘 - 옥타브
+  for (var i = 0; i < 3; i++){
+    octaveImg[i] = loadImage(`pianoImg/green${i}.png`);
+  }
+  // 버튼들..
+  // play
+  playImg = loadImage(`buttons/play.png`);
+  // stop
+  stopImg = loadImage(`buttons/stop.png`);
+  // reset
+  resetImg = loadImage("buttons/reset.png");
+  // volume
+  volumeImg = loadImage("buttons/volume.png");
+  // bpm
+  bpmImg = loadImage("buttons/bpm.png");
+  // download
+  downloadImg = loadImage("buttons/download.png");
+  // changeMainMode - piano
+  // for (var i = 0; i < 2; i++) pianoButtonImg[i] = loadImage(`buttons/piano${i}.png`);
+  // for (var i = 0; i < 2; i++) effectButtonImg[i] = loadImage(`buttons/effect${i}.png`);
 }
 
 function setup() {
@@ -36,6 +56,16 @@ function setup() {
   stroke(220);
   strokeWeight(windowWidth / 300);
   for (var i = 0; i < 21; i++) {
+    rect(
+      (i * width) / 21,
+      height - height / 3,
+      width / 21,
+      height / 3,
+      0,
+      0,
+      10,
+      10
+    );
     rect(
       (i * width) / 21,
       height - height / 3,
@@ -80,28 +110,67 @@ function setup() {
         10,
         10
       );
+      rect(
+        width / 42 + (i * width) / 21,
+        height - height / 3,
+        width / 21,
+        height / 6,
+        0,
+        0,
+        10,
+        10
+      );
+      rect(
+        width / 42 + (i * width) / 21 + width / 3,
+        height - height / 3,
+        width / 21,
+        height / 6,
+        0,
+        0,
+        10,
+        10
+      );
+      rect(
+        width / 42 + (i * width) / 21 + (width / 3) * 2,
+        height - height / 3,
+        width / 21,
+        height / 6,
+        0,
+        0,
+        10,
+        10
+      );
     }
   }
-  noStroke();
-  fill(210);
-  rect(width * 0.05 + 3, height / 5 + 5, width * 0.82, height / 6, 40);
-  fill(230);
-  rect(width * 0.05, height / 5, width * 0.82, height / 6, 40);
+  reset();
 
-  //button
-  button = createImg("buttons/piano.png");
-  button.size(width * 0.1, height * 0.06);
-  button.position(width * 0.03, height * 0.57);
-  button.mousePressed(function () {
+  resetButton = createButton("RESET");
+  resetButton.position(width * 0.89, height * 0.58);
+  resetButton.mousePressed(reset);
+
+  volumeSlider = createSlider(0, 1, 1, 0.1);
+  volumeSlider.position(width * 0.9, 10);
+  volumeSlider.size(width * 0.08);
+
+  bpmSlider = createSlider(0.4, 0.8, 0.6, 0.2);
+  bpmSlider.position(width * 0.9, 30);
+  bpmSlider.size(width * 0.08);
+
+  musicPlayButton = createButton("PLAY");
+  musicPlayButton.position(0, 0);
+  musicPlayButton.mousePressed(musicPlay);
+
+  pianoButton = createImg("buttons/piano1.png", "");
+  pianoButton.size(width * 0.1, height * 0.06);
+  pianoButton.position(width * 0.03, height * 0.57);
+  pianoButton.mousePressed(function () {
     mainMode = true;
-    console.log("changepiano");
   });
-  button2 = createImg("buttons/effect.png");
-  button2.size(width * 0.18, height * 0.06);
-  button2.position(width * 0.15, height * 0.57);
-  button2.mousePressed(function () {
+  effectButton = createImg("buttons/effect0.png", "");
+  effectButton.size(width * 0.18, height * 0.06);
+  effectButton.position(width * 0.15, height * 0.57);
+  effectButton.mousePressed(function () {
     mainMode = false;
-    console.log("changeeffect");
   });
 }
 
@@ -110,6 +179,8 @@ function draw() {}
 function changeMode_piano() {
   if (mouseY > windowHeight - height / 6) {
     for (var i = 0; i < 21; i++) {
+      if (mouseX > (i * width) / 21 && mouseX < ((i + 1) * width) / 21)
+        mode = i;
       if (mouseX > (i * width) / 21 && mouseX < ((i + 1) * width) / 21)
         mode = i;
     }
@@ -150,10 +221,34 @@ function changeMode_soundEffect() {
     for (var i = 0; i < 21; i++) {
       if (mouseX > (i * width) / 21 && mouseX < ((i + 1) * width) / 21)
         mode = i + if_effect;
+      if (mouseX > (i * width) / 21 && mouseX < ((i + 1) * width) / 21)
+        mode = i + if_effect;
     }
   }
   if (mouseY < windowHeight - height / 6) {
     if (mouseX < width / 42) mode = if_effect;
+    if (mouseX > (width / 42) * 5 && mouseX < (width / 42) * 6)
+      mode = 2 + if_effect;
+    if (mouseX > (width / 42) * 6 && mouseX < (width / 42) * 7)
+      mode = 3 + if_effect;
+    if (mouseX > (width / 42) * 13 && mouseX < (width / 42) * 14)
+      mode = 6 + if_effect;
+    if (mouseX > (width / 42) * 14 && mouseX < (width / 42) * 15)
+      mode = 7 + if_effect;
+    if (mouseX > (width / 42) * 19 && mouseX < (width / 42) * 20)
+      mode = 9 + if_effect;
+    if (mouseX > (width / 42) * 20 && mouseX < (width / 42) * 21)
+      mode = 10 + if_effect;
+    if (mouseX > (width / 42) * 27 && mouseX < (width / 42) * 28)
+      mode = 13 + if_effect;
+    if (mouseX > (width / 42) * 28 && mouseX < (width / 42) * 29)
+      mode = 14 + if_effect;
+    if (mouseX > (width / 42) * 33 && mouseX < (width / 42) * 34)
+      mode = 16 + if_effect;
+    if (mouseX > (width / 42) * 34 && mouseX < (width / 42) * 35)
+      mode = 17 + if_effect;
+    if (mouseX > (width / 42) * 41 && mouseX < (width / 42) * 42)
+      mode = 20 + if_effect;
     if (mouseX > (width / 42) * 5 && mouseX < (width / 42) * 6)
       mode = 2 + if_effect;
     if (mouseX > (width / 42) * 6 && mouseX < (width / 42) * 7)
@@ -184,13 +279,20 @@ function soundPlay() {
     mouseX < windowWidth &&
     mouseY > windowHeight - height / 3 &&
     mouseY < windowHeight
+  )
+  if (
+    mouseX < windowWidth &&
+    mouseY > windowHeight - height / 3 &&
+    mouseY < windowHeight
   ) {
     if (mainMode == true) changeMode_piano();
     else changeMode_soundEffect();
     sounds[mode].play();
-    sounds[mode].amp(1);
+    sounds[mode].amp(volumeSlider.value());
     if (musicData.length < 12) {
       musicData.push(mode);
+      musicDataTime.push(bpmSlider.value());
+      f_musicDataIconImg();
     }
   }
 }
@@ -200,5 +302,45 @@ function mousePressed() {
 }
 
 function mouseReleased() {
-  sounds[mode].amp(0, 1);
+  sounds[mode].amp(0, bpmSlider.value());
+  sounds[mode].stop(bpmSlider.value());
+}
+
+function reset() {
+  noStroke();
+  fill(210);
+  rect(width * 0.05 + 3, height / 5 + 5, width * 0.82, height / 6, 40);
+  fill(230);
+  rect(width * 0.05, height / 5, width * 0.82, height / 6, 40);
+  musicData.splice(0, musicData.length);
+  musicDataTime.splice(0, musicDataTime.length);
+}
+
+function f_musicDataIconImg() {
+  if (mainMode == true){
+    image(musicDataIconImg[mode], width*0.08 + (musicData.length-1)*(width*0.065), height*0.25, width*0.05, width*0.05);
+  }else{
+    image(musicDataIconImg[mode-15], width*0.08 + (musicData.length-1)*(width*0.065), height*0.25, width*0.05, width*0.05);
+  }
+}
+
+function musicPlay() {
+  delay = 0;
+  recorder = new p5.SoundRecorder();
+  // 여기에 아무것도 안넣어서 오류뜸
+  recorder.setInput();
+
+  soundFile = new p5.SoundFile();
+
+  recorder.record(soundFile);
+
+  for (let i = 0; i < musicData.length; i++) {
+    sounds[musicData[i]].amp(volumeSlider.value());
+    sounds[musicData[i]].play(delay);
+    sounds[musicData[i]].stop(delay + musicDataTime[i]);
+    console.log("play stop" + musicData[i]);
+    delay = delay + musicDataTime[i];
+  }
+
+  recorder.stop();
 }
