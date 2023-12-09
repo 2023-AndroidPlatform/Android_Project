@@ -1,6 +1,7 @@
 let mainMode = true;
 let mode = 0;
-
+let button; //button 함수 추가-LGH
+let button2;
 // 추가한 부분
 // 그냥 보기 편하라고 해논거
 // 만약 effect모드라면 항상 mode에 36을 더해야 하는데 숫자 그대로 써 놓으면 지저분해서
@@ -12,18 +13,20 @@ let musicData = [];
 // 아이콘 이미지 저장할 변수
 let iconImage = [];
 
+//함수 추가 -LGH
+
 function preload() {
   soundFormats("mp3", "ogg");
-  for (var i = 0; i < 36; i++) {
+  for (var i = 0; i < 57; i++) {
     if (i < 36) sounds[i] = loadSound(`sound/piano${i}.mp3`);
-    else sounds[i] = loadSound(`sound/effect${i}.mp3`);
+    else sounds[i] = loadSound(`sound/effect${i-if_effect}.mp3`);
   }
   // 추가한 부분
   // 이미지 불러와서 iconImage배열에 순서대로 저장
   // 불러오는 파일명 수정 필요
-  for (var j = 0; j < 36; j++){
-    iconImage[j] = loadImage(`이미지폴더명/이미지이름${j}.확장자`)
-  }
+  //for (var j = 0; j < 36; j++){
+  //  iconImage[j] = loadImage(`이미지폴더명/이미지이름${j}.확장자`)
+  //}
 }
 
 function setup() {
@@ -48,6 +51,25 @@ function setup() {
   rect(width *0.05+3, height/5+5, width * 0.82, height/6, 40)
   fill(230)
   rect(width *0.05, height/5, width * 0.82, height/6, 40)
+
+  //button
+  button = createImg('buttonimages/piano.png');
+  button.size(width*0.1, height*0.06); 
+  button.position(width*0.03, height*0.57);
+  button.mousePressed(
+    function(){
+      mainMode=true;
+      console.log("changepiano");
+    }
+  );
+  button2 = createImg('buttonimages/effect.png');
+  button2.size(width*0.18, height*0.06); 
+  button2.position(width*0.15, height*0.57);
+  button2.mousePressed(
+    function(){
+      mainMode=false;
+      console.log("changeeffect");
+    }); 
 }
 
 function draw() {
