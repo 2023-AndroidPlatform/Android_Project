@@ -18,10 +18,10 @@ function preload() {
     if (i < 36) sounds[i] = loadSound(`sound/piano${i}.mp3`);
     else sounds[i] = loadSound(`sound/effect${i-if_effect}.mp3`);
   }
-  for (var j = 0; j < 21; j++){
-    iconImage[j] = loadImage(`icons/icon${j}.png`);
-  }
-  testIcon = loadImage('icons/G.png');
+  // for (var j = 0; j < 21; j++){
+  //   iconImage[j] = loadImage(`icons/icon${j}.png`);
+  // }
+  // testIcon = loadImage('icons/G.png');
 }
 
 function setup() {
@@ -127,14 +127,14 @@ function soundPlay() {
   if (mouseX < windowWidth && mouseY > windowHeight - height / 3 && mouseY < windowHeight) {
     if (mainMode == true) changeMode_piano();
     else changeMode_soundEffect();
-    console.log(mode);
+    console.log("지금 누른 번호는 "+mode);
     sounds[mode].play();
     sounds[mode].amp(volumeSlider.value());
     if (musicData.length < 12){
       musicData.push(mode);
       musicDataTime.push(bpmSlider.value());
-      console.log(musicData);
-      console.log(musicDataTime);
+      console.log("쌓인 데이터 "+musicData);
+      console.log("데이터 재생 시간 "+musicDataTime);
       musicDataIcon();
     }
   }
@@ -160,15 +160,17 @@ function reset(){
 }
 
 function musicDataIcon(){
-  if (mainMode == true){
-    image(testIcon, width*0.08 + (musicData.length-1)*(width*0.065), height*0.25, width*0.04, width*0.04);
-  }else{
-    image(iconImage[mode-if_effect], width*0.08 + (musicData.length-1)*(width*0.065), height*0.25, width*0.04, width*0.04)
-  }
+  // if (mainMode == true){
+  //   image(testIcon, width*0.08 + (musicData.length-1)*(width*0.065), height*0.25, width*0.04, width*0.04);
+  // }else{
+  //   image(iconImage[mode-if_effect], width*0.08 + (musicData.length-1)*(width*0.065), height*0.25, width*0.04, width*0.04)
+  // }
 }
 
 function musicPlay(){
+  delay = 0;
   recorder = new p5.SoundRecorder();
+  // 여기에 아무것도 안넣어서 오류뜸
   recorder.setInput();
 
   soundFile = new p5.SoundFile();
@@ -178,11 +180,10 @@ function musicPlay(){
   for (let i = 0; i < musicData.length; i++){
     sounds[musicData[i]].amp(volumeSlider.value());
     sounds[musicData[i]].play(delay);
-    console.log("playing "+i);
     sounds[musicData[i]].stop(delay+musicDataTime[i]);
+    console.log("play stop"+musicData[i]);
     delay = delay + musicDataTime[i];
   }
 
   recorder.stop();
-  delay = 0;
 }
