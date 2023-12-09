@@ -1,16 +1,15 @@
 let mainMode = true;
 let mode = 0;
-let button; //button 함수 추가-LGH
-let button2;
+let pianoButton, effectButton, resetButton, musicPlayButton;
 let if_effect = 36;
 let sounds = [];
 let musicData = [];
 let musicDataTime = [];
-let iconImage = [];
-let resetButton;
-let testIcon;
+let musicDataIconImg = [];
+let keybordImg = [];
+let playImg, stopImg, resetImg, volumeImg, bpmImg, downloadImg;
+let octaveImg = [];
 let volumeSlider, bpmSlider;
-let musicPlayButton;
 let recorder, soundFile;
 let delay = 0;
 
@@ -20,15 +19,34 @@ function preload() {
     if (i < 36) sounds[i] = loadSound(`sound/piano${i}.mp3`);
     else sounds[i] = loadSound(`sound/effect${i - if_effect}.mp3`);
   }
-  // 추가한 부분
-  // 이미지 불러와서 iconImage배열에 순서대로 저장
-  // 불러오는 파일명 수정 필요
-  //for (var j = 0; j < 36; j++){
-  //  iconImage[j] = loadImage(`이미지폴더명/이미지이름${j}.확장자`)
-  //}
-  //for (var j = 0; j < 36; j++){
-  //  iconImage[j] = loadImage(`이미지폴더명/이미지이름${j}.확장자`)
-  //}
+  // musicData 아이콘
+  for (var i = 0; i < 42; i++){
+    musicDataIconImg[i] = loadImage(`icons/icon${i}.png`);
+  }
+  // piano 위에 넣을 아이콘 - effect
+  for (var i = 0; i < 21; i++){
+    keybordImg[i] = loadImage(`pianoImg/img${i}.png`);
+  }
+  // piano 위에 넣을 아이콘 - 옥타브
+  for (var i = 0; i < 3; i++){
+    octaveImg[i] = loadImage(`pianoImg/green${i}.png`);
+  }
+  // 버튼들..
+  // play
+  playImg = loadImage(`buttons/play.png`);
+  // stop
+  stopImg = loadImage(`buttons/stop.png`);
+  // reset
+  resetImg = loadImage("buttons/reset.png");
+  // volume
+  volumeImg = loadImage("buttons/volume.png");
+  // bpm
+  bpmImg = loadImage("buttons/bpm.png");
+  // download
+  downloadImg = loadImage("buttons/download.png");
+  // changeMainMode - piano
+  // for (var i = 0; i < 2; i++) pianoButtonImg[i] = loadImage(`buttons/piano${i}.png`);
+  // for (var i = 0; i < 2; i++) effectButtonImg[i] = loadImage(`buttons/effect${i}.png`);
 }
 
 function setup() {
@@ -138,25 +156,21 @@ function setup() {
   bpmSlider.position(width * 0.9, 30);
   bpmSlider.size(width * 0.08);
 
-  // test
   musicPlayButton = createButton("PLAY");
   musicPlayButton.position(0, 0);
   musicPlayButton.mousePressed(musicPlay);
 
-  //button
-  button = createImg("buttons/piano.png");
-  button.size(width * 0.1, height * 0.06);
-  button.position(width * 0.03, height * 0.57);
-  button.mousePressed(function () {
+  pianoButton = createImg("buttons/piano1.png", "");
+  pianoButton.size(width * 0.1, height * 0.06);
+  pianoButton.position(width * 0.03, height * 0.57);
+  pianoButton.mousePressed(function () {
     mainMode = true;
-    console.log("changepiano");
   });
-  button2 = createImg("buttons/effect.png");
-  button2.size(width * 0.18, height * 0.06);
-  button2.position(width * 0.15, height * 0.57);
-  button2.mousePressed(function () {
+  effectButton = createImg("buttons/effect0.png", "");
+  effectButton.size(width * 0.18, height * 0.06);
+  effectButton.position(width * 0.15, height * 0.57);
+  effectButton.mousePressed(function () {
     mainMode = false;
-    console.log("changeeffect");
   });
 }
 
@@ -278,7 +292,7 @@ function soundPlay() {
     if (musicData.length < 12) {
       musicData.push(mode);
       musicDataTime.push(bpmSlider.value());
-      musicDataIcon();
+      f_musicDataIconImg();
     }
   }
 }
@@ -302,12 +316,12 @@ function reset() {
   musicDataTime.splice(0, musicDataTime.length);
 }
 
-function musicDataIcon() {
-  // if (mainMode == true){
-  //   image(testIcon, width*0.08 + (musicData.length-1)*(width*0.065), height*0.25, width*0.04, width*0.04);
-  // }else{
-  //   image(iconImage[mode-if_effect], width*0.08 + (musicData.length-1)*(width*0.065), height*0.25, width*0.04, width*0.04)
-  // }
+function f_musicDataIconImg() {
+  if (mainMode == true){
+    image(musicDataIconImg[mode], width*0.08 + (musicData.length-1)*(width*0.065), height*0.25, width*0.05, width*0.05);
+  }else{
+    image(musicDataIconImg[mode-15], width*0.08 + (musicData.length-1)*(width*0.065), height*0.25, width*0.05, width*0.05);
+  }
 }
 
 function musicPlay() {
