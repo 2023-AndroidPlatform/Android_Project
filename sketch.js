@@ -26,6 +26,9 @@ function preload() {
   //for (var j = 0; j < 36; j++){
   //  iconImage[j] = loadImage(`이미지폴더명/이미지이름${j}.확장자`)
   //}
+  //for (var j = 0; j < 36; j++){
+  //  iconImage[j] = loadImage(`이미지폴더명/이미지이름${j}.확장자`)
+  //}
 }
 
 function setup() {
@@ -45,10 +48,50 @@ function setup() {
       10,
       10
     );
+    rect(
+      (i * width) / 21,
+      height - height / 3,
+      width / 21,
+      height / 3,
+      0,
+      0,
+      10,
+      10
+    );
   }
   fill(0);
   for (var i = 0; i < 6; i++) {
     if (i % 4 != 2) {
+      rect(
+        width / 42 + (i * width) / 21,
+        height - height / 3,
+        width / 21,
+        height / 6,
+        0,
+        0,
+        10,
+        10
+      );
+      rect(
+        width / 42 + (i * width) / 21 + width / 3,
+        height - height / 3,
+        width / 21,
+        height / 6,
+        0,
+        0,
+        10,
+        10
+      );
+      rect(
+        width / 42 + (i * width) / 21 + (width / 3) * 2,
+        height - height / 3,
+        width / 21,
+        height / 6,
+        0,
+        0,
+        10,
+        10
+      );
       rect(
         width / 42 + (i * width) / 21,
         height - height / 3,
@@ -124,6 +167,8 @@ function changeMode_piano() {
     for (var i = 0; i < 21; i++) {
       if (mouseX > (i * width) / 21 && mouseX < ((i + 1) * width) / 21)
         mode = i;
+      if (mouseX > (i * width) / 21 && mouseX < ((i + 1) * width) / 21)
+        mode = i;
     }
   }
   if (mouseY < windowHeight - height / 6) {
@@ -162,6 +207,8 @@ function changeMode_soundEffect() {
     for (var i = 0; i < 21; i++) {
       if (mouseX > (i * width) / 21 && mouseX < ((i + 1) * width) / 21)
         mode = i + if_effect;
+      if (mouseX > (i * width) / 21 && mouseX < ((i + 1) * width) / 21)
+        mode = i + if_effect;
     }
   }
   if (mouseY < windowHeight - height / 6) {
@@ -188,10 +235,37 @@ function changeMode_soundEffect() {
       mode = 17 + if_effect;
     if (mouseX > (width / 42) * 41 && mouseX < (width / 42) * 42)
       mode = 20 + if_effect;
+    if (mouseX > (width / 42) * 5 && mouseX < (width / 42) * 6)
+      mode = 2 + if_effect;
+    if (mouseX > (width / 42) * 6 && mouseX < (width / 42) * 7)
+      mode = 3 + if_effect;
+    if (mouseX > (width / 42) * 13 && mouseX < (width / 42) * 14)
+      mode = 6 + if_effect;
+    if (mouseX > (width / 42) * 14 && mouseX < (width / 42) * 15)
+      mode = 7 + if_effect;
+    if (mouseX > (width / 42) * 19 && mouseX < (width / 42) * 20)
+      mode = 9 + if_effect;
+    if (mouseX > (width / 42) * 20 && mouseX < (width / 42) * 21)
+      mode = 10 + if_effect;
+    if (mouseX > (width / 42) * 27 && mouseX < (width / 42) * 28)
+      mode = 13 + if_effect;
+    if (mouseX > (width / 42) * 28 && mouseX < (width / 42) * 29)
+      mode = 14 + if_effect;
+    if (mouseX > (width / 42) * 33 && mouseX < (width / 42) * 34)
+      mode = 16 + if_effect;
+    if (mouseX > (width / 42) * 34 && mouseX < (width / 42) * 35)
+      mode = 17 + if_effect;
+    if (mouseX > (width / 42) * 41 && mouseX < (width / 42) * 42)
+      mode = 20 + if_effect;
   }
 }
 
 function soundPlay() {
+  if (
+    mouseX < windowWidth &&
+    mouseY > windowHeight - height / 3 &&
+    mouseY < windowHeight
+  )
   if (
     mouseX < windowWidth &&
     mouseY > windowHeight - height / 3 &&
