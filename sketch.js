@@ -33,17 +33,17 @@ function preload() {
   }
   // 버튼들..
   // play
-  playImg = loadImage(`buttons/play.png`);
+  // playImg = loadImage(`buttons/play.png`);
   // stop
-  stopImg = loadImage(`buttons/stop.png`);
+  // stopImg = loadImage(`buttons/stop.png`);
   // reset
-  resetImg = loadImage("buttons/reset.png");
+  // resetImg = loadImage("buttons/reset.png");
   // volume
-  volumeImg = loadImage("buttons/volume.png");
+  // volumeImg = loadImage("buttons/volume.png");
   // bpm
-  bpmImg = loadImage("buttons/bpm.png");
+  // bpmImg = loadImage("buttons/bpm.png");
   // download
-  downloadImg = loadImage("buttons/download.png");
+  // downloadImg = loadImage("buttons/download.png");
   // changeMainMode - piano
   // for (var i = 0; i < 2; i++) pianoButtonImg[i] = loadImage(`buttons/piano${i}.png`);
   // for (var i = 0; i < 2; i++) effectButtonImg[i] = loadImage(`buttons/effect${i}.png`);
@@ -144,8 +144,9 @@ function setup() {
   }
   reset();
 
-  resetButton = createButton("RESET");
-  resetButton.position(width * 0.89, height * 0.58);
+  resetButton = createImg("buttons/reset.png");
+  resetButton.size(width * 0.1, height * 0.06);
+  resetButton.position(width * 0.87, height * 0.58);
   resetButton.mousePressed(reset);
 
   volumeSlider = createSlider(0, 1, 1, 0.1);
