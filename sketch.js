@@ -39,9 +39,9 @@ function preload() {
   // reset
   // resetImg = loadImage("buttons/reset.png");
   // volume
-  // volumeImg = loadImage("buttons/volume.png");
+  volumeImg = loadImage("buttons/volume.png");
   // bpm
-  // bpmImg = loadImage("buttons/bpm.png");
+  bpmImg = loadImage("buttons/bpm.png");
   // download
   // downloadImg = loadImage("buttons/download.png");
   // changeMainMode - piano
@@ -149,12 +149,14 @@ function setup() {
   resetButton.position(width * 0.87, height * 0.58);
   resetButton.mousePressed(reset);
 
+  image(volumeImg,width * 0.885,17,width*0.01,width*0.01);
   volumeSlider = createSlider(0, 1, 1, 0.1);
-  volumeSlider.position(width * 0.9, 10);
+  volumeSlider.position(width * 0.9, 20);
   volumeSlider.size(width * 0.08);
 
+  image(bpmImg,width * 0.885,58,width*0.01,width*0.01);
   bpmSlider = createSlider(0.4, 0.8, 0.6, 0.2);
-  bpmSlider.position(width * 0.9, 30);
+  bpmSlider.position(width * 0.9, 60);
   bpmSlider.size(width * 0.08);
 
   musicPlayButton = createButton("PLAY");
