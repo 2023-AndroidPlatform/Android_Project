@@ -20,6 +20,7 @@ function preload() {
   for (var i = 0; i < 57; i++) {
     if (i < 36) sounds[i] = loadSound(`sound/piano${i}.mp3`);
     else sounds[i] = loadSound(`sound/effect${i - if_effect}.mp3`);
+
   }
   // musicData 아이콘
   for (var i = 0; i < 57; i++) {
@@ -69,7 +70,7 @@ function setup() {
   });
 
   pianoButton = createImg("buttons/piano1.png", "");
-  pianoButton.size(width * 0.1, height * 0.06);
+  pianoButton.size(width * 0.1, height * 0.065);
   pianoButton.position(width * 0.03, height * 0.57);
   pianoButton.mousePressed(function () {
     soundPlay((mainMode = true));
@@ -77,7 +78,7 @@ function setup() {
     f_keyboardImg();
   });
   effectButton = createImg("buttons/effect0.png", "");
-  effectButton.size(width * 0.18, height * 0.06);
+  effectButton.size(width * 0.18, height * 0.065);
   effectButton.position(width * 0.15, height * 0.57);
   effectButton.mousePressed(function () {
     soundPlay((mainMode = false));
@@ -87,8 +88,8 @@ function setup() {
 
   // 다운로드 버튼 추가
   downloadButton = createImg("buttons/download.png", "");
-  downloadButton.size(width * 0.15, height * 0.05);
-  downloadButton.position(width * 0.7, height * 0.13);
+  downloadButton.size(width * 0.15, height * 0.06);
+  downloadButton.position(width * 0.058, height * 0.1);
   downloadButton.mousePressed(download);
 }
 
@@ -304,6 +305,8 @@ function soundPlay() {
         musicData.push(mode);
         musicDataTime.push(bpmSlider.value());
         f_musicDataIconImg();
+        console.log(musicData);
+        console.log(musicDataTime);
       }
     }
 }
@@ -376,6 +379,7 @@ function musicPlay() {
       sounds[musicData[i]].play(delay);
       sounds[musicData[i]].stop(delay + musicDataTime[i]);
       delay = delay + musicDataTime[i];
+      print("played "+i);
     }
 
     recorder.stop();
@@ -412,7 +416,7 @@ function f_keyboardImg() {
         i * (width / octaveImg.length) + 7,
         height - height / 8,
         width / 26,
-        height / 20
+        height / 14
       );
     }
   } else {
@@ -421,8 +425,8 @@ function f_keyboardImg() {
         keyboardImg[i],
         i * (width / keyboardImg.length) + 7,
         height - height / 8,
-        width / 26,
-        height / 20
+        width / 28,
+        height / 15
       );
     }
   }
