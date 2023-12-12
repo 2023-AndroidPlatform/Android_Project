@@ -33,22 +33,10 @@ function preload() {
   for (var i = 0; i < 3; i++) {
     octaveImg[i] = loadImage(`pianoImg/green${i}.png`);
   }
-  // 버튼들..
-  // play
-  // playImg = loadImage(`buttons/play.png`);
-  // stop
-  // stopImg = loadImage(`buttons/stop.png`);
-  // reset
-  // resetImg = loadImage("buttons/reset.png");
   // volume
   volumeImg = loadImage("buttons/volume.png");
   // bpm
   bpmImg = loadImage("buttons/bpm.png");
-  // download
-  // downloadImg = loadImage("buttons/download.png");
-  // changeMainMode - piano
-  // for (var i = 0; i < 2; i++) pianoButtonImg[i] = loadImage(`buttons/piano${i}.png`);
-  // for (var i = 0; i < 2; i++) effectButtonImg[i] = loadImage(`buttons/effect${i}.png`);
 }
 
 function setup() {
