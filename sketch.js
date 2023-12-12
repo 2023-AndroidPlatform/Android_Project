@@ -33,32 +33,20 @@ function preload() {
   for (var i = 0; i < 3; i++) {
     octaveImg[i] = loadImage(`pianoImg/green${i}.png`);
   }
-  // 버튼들..
-  // play
-  // playImg = loadImage(`buttons/play.png`);
-  // stop
-  // stopImg = loadImage(`buttons/stop.png`);
-  // reset
-  // resetImg = loadImage("buttons/reset.png");
   // volume
   volumeImg = loadImage("buttons/volume.png");
   // bpm
   bpmImg = loadImage("buttons/bpm.png");
-  // download
-  // downloadImg = loadImage("buttons/download.png");
-  // changeMainMode - piano
-  // for (var i = 0; i < 2; i++) pianoButtonImg[i] = loadImage(`buttons/piano${i}.png`);
-  // for (var i = 0; i < 2; i++) effectButtonImg[i] = loadImage(`buttons/effect${i}.png`);
 }
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
   background(220);
   drawPiano();
-  f_keyboardImg()
+  f_keyboardImg();
   reset();
 
-  resetButton = createImg("buttons/reset.png","");
+  resetButton = createImg("buttons/reset.png", "");
   resetButton.size(width * 0.1, height * 0.06);
   resetButton.position(width * 0.87, height * 0.58);
   resetButton.mousePressed(reset);
@@ -84,18 +72,24 @@ function setup() {
   pianoButton.size(width * 0.1, height * 0.06);
   pianoButton.position(width * 0.03, height * 0.57);
   pianoButton.mousePressed(function () {
-    soundPlay(mainMode = true);
-    buttonChange(change = true);
+    soundPlay((mainMode = true));
+    buttonChange((change = true));
     f_keyboardImg();
   });
   effectButton = createImg("buttons/effect0.png", "");
   effectButton.size(width * 0.18, height * 0.06);
   effectButton.position(width * 0.15, height * 0.57);
   effectButton.mousePressed(function () {
-    soundPlay(mainMode = false);
-    buttonChange(change = false);
+    soundPlay((mainMode = false));
+    buttonChange((change = false));
     f_keyboardImg();
   });
+
+  // 다운로드 버튼 추가
+  downloadButton = createImg("buttons/download.png", "");
+  downloadButton.size(width * 0.15, height * 0.05);
+  downloadButton.position(width * 0.7, height * 0.13);
+  downloadButton.mousePressed(download);
 }
 
 function draw() {}
@@ -333,6 +327,9 @@ function reset() {
   musicDataTime.splice(0, musicDataTime.length);
 }
 
+// 다운로드 함수
+function download() {}
+
 function f_musicDataIconImg() {
   if (mainMode == true) {
     image(
@@ -353,27 +350,27 @@ function f_musicDataIconImg() {
   }
 }
 
-function playButtonChange(){
-  if (playing == true){
-    musicPlayButton.attribute('src', 'buttons/stop.png');
-  } else{
-    musicPlayButton.attribute('src', 'buttons/play.png');
+function playButtonChange() {
+  if (playing == true) {
+    musicPlayButton.attribute("src", "buttons/stop.png");
+  } else {
+    musicPlayButton.attribute("src", "buttons/play.png");
   }
 }
 
 function musicPlay() {
-  if (playing == false){
+  if (playing == false) {
     playing = true;
     playButtonChange();
     delay = 0;
     recorder = new p5.SoundRecorder();
     // 여기에 아무것도 안넣어서 오류뜸
     recorder.setInput();
-  
+
     soundFile = new p5.SoundFile();
-  
+
     recorder.record(soundFile);
-  
+
     for (let i = 0; i < musicData.length; i++) {
       sounds[musicData[i]].amp(volumeSlider.value());
       sounds[musicData[i]].play(delay);
@@ -386,7 +383,7 @@ function musicPlay() {
     //   playing = false;
     //   playButtonChange();
     // }
-  } else{
+  } else {
     playing = false;
     playButtonChange();
     recorder.stop();
@@ -396,25 +393,37 @@ function musicPlay() {
   }
 }
 
-function buttonChange(){
+function buttonChange() {
   drawPiano();
-  if (change == true){
-    pianoButton.attribute('src', 'buttons/piano1.png');
-    effectButton.attribute('src', 'buttons/effect0.png');
+  if (change == true) {
+    pianoButton.attribute("src", "buttons/piano1.png");
+    effectButton.attribute("src", "buttons/effect0.png");
   } else {
-    pianoButton.attribute('src', 'buttons/piano0.png');
-    effectButton.attribute('src', 'buttons/effect1.png');
+    pianoButton.attribute("src", "buttons/piano0.png");
+    effectButton.attribute("src", "buttons/effect1.png");
   }
 }
 
-function f_keyboardImg(){
-  if (change == true){
-    for (var i = 0; i < octaveImg.length; i++){
-      image(octaveImg[i], i * (width / octaveImg.length) + 7, height - height/8, width/26, height/20);
+function f_keyboardImg() {
+  if (change == true) {
+    for (var i = 0; i < octaveImg.length; i++) {
+      image(
+        octaveImg[i],
+        i * (width / octaveImg.length) + 7,
+        height - height / 8,
+        width / 26,
+        height / 20
+      );
     }
   } else {
-    for (var i = 0; i < keyboardImg.length; i++){
-      image(keyboardImg[i], i * (width / keyboardImg.length) + 7, height - height/8, width/26, height/20)
+    for (var i = 0; i < keyboardImg.length; i++) {
+      image(
+        keyboardImg[i],
+        i * (width / keyboardImg.length) + 7,
+        height - height / 8,
+        width / 26,
+        height / 20
+      );
     }
   }
 }
