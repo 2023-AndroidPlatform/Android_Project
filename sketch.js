@@ -20,15 +20,15 @@ function preload() {
     else sounds[i] = loadSound(`sound/effect${i - if_effect}.mp3`);
   }
   // musicData 아이콘
-  for (var i = 0; i < 42; i++){
+  for (var i = 0; i < 57; i++) {
     musicDataIconImg[i] = loadImage(`icons/icon${i}.png`);
   }
   // piano 위에 넣을 아이콘 - effect
-  for (var i = 0; i < 21; i++){
+  for (var i = 0; i < 21; i++) {
     keybordImg[i] = loadImage(`pianoImg/img${i}.png`);
   }
   // piano 위에 넣을 아이콘 - 옥타브
-  for (var i = 0; i < 3; i++){
+  for (var i = 0; i < 3; i++) {
     octaveImg[i] = loadImage(`pianoImg/green${i}.png`);
   }
   // 버튼들..
@@ -52,6 +52,45 @@ function preload() {
 function setup() {
   createCanvas(windowWidth, windowHeight);
   background(220);
+  drawPiano();
+  reset();
+
+  resetButton = createImg("buttons/reset.png");
+  resetButton.size(width * 0.1, height * 0.06);
+  resetButton.position(width * 0.87, height * 0.58);
+  resetButton.mousePressed(reset);
+
+  image(volumeImg, width * 0.885, 17, width * 0.01, width * 0.01);
+  volumeSlider = createSlider(0, 1, 1, 0.1);
+  volumeSlider.position(width * 0.9, 20);
+  volumeSlider.size(width * 0.08);
+
+  image(bpmImg, width * 0.885, 58, width * 0.01, width * 0.01);
+  bpmSlider = createSlider(0.4, 0.8, 0.6, 0.2);
+  bpmSlider.position(width * 0.9, 60);
+  bpmSlider.size(width * 0.08);
+
+  musicPlayButton = createButton("PLAY");
+  musicPlayButton.position(0, 0);
+  musicPlayButton.mousePressed(musicPlay);
+
+  pianoButton = createImg("buttons/piano1.png", "");
+  pianoButton.size(width * 0.1, height * 0.06);
+  pianoButton.position(width * 0.03, height * 0.57);
+  pianoButton.mousePressed(function () {
+    mainMode = true;
+  });
+  effectButton = createImg("buttons/effect0.png", "");
+  effectButton.size(width * 0.18, height * 0.06);
+  effectButton.position(width * 0.15, height * 0.57);
+  effectButton.mousePressed(function () {
+    mainMode = false;
+  });
+}
+
+function draw() {}
+
+function drawPiano() {
   fill(255);
   stroke(220);
   strokeWeight(windowWidth / 300);
@@ -142,42 +181,7 @@ function setup() {
       );
     }
   }
-  reset();
-
-  resetButton = createImg("buttons/reset.png");
-  resetButton.size(width * 0.1, height * 0.06);
-  resetButton.position(width * 0.87, height * 0.58);
-  resetButton.mousePressed(reset);
-
-  image(volumeImg,width * 0.885,17,width*0.01,width*0.01);
-  volumeSlider = createSlider(0, 1, 1, 0.1);
-  volumeSlider.position(width * 0.9, 20);
-  volumeSlider.size(width * 0.08);
-
-  image(bpmImg,width * 0.885,58,width*0.01,width*0.01);
-  bpmSlider = createSlider(0.4, 0.8, 0.6, 0.2);
-  bpmSlider.position(width * 0.9, 60);
-  bpmSlider.size(width * 0.08);
-
-  musicPlayButton = createButton("PLAY");
-  musicPlayButton.position(0, 0);
-  musicPlayButton.mousePressed(musicPlay);
-
-  pianoButton = createImg("buttons/piano1.png", "");
-  pianoButton.size(width * 0.1, height * 0.06);
-  pianoButton.position(width * 0.03, height * 0.57);
-  pianoButton.mousePressed(function () {
-    mainMode = true;
-  });
-  effectButton = createImg("buttons/effect0.png", "");
-  effectButton.size(width * 0.18, height * 0.06);
-  effectButton.position(width * 0.15, height * 0.57);
-  effectButton.mousePressed(function () {
-    mainMode = false;
-  });
 }
-
-function draw() {}
 
 function changeMode_piano() {
   if (mouseY > windowHeight - height / 6) {
@@ -283,21 +287,21 @@ function soundPlay() {
     mouseY > windowHeight - height / 3 &&
     mouseY < windowHeight
   )
-  if (
-    mouseX < windowWidth &&
-    mouseY > windowHeight - height / 3 &&
-    mouseY < windowHeight
-  ) {
-    if (mainMode == true) changeMode_piano();
-    else changeMode_soundEffect();
-    sounds[mode].play();
-    sounds[mode].amp(volumeSlider.value());
-    if (musicData.length < 12) {
-      musicData.push(mode);
-      musicDataTime.push(bpmSlider.value());
-      f_musicDataIconImg();
+    if (
+      mouseX < windowWidth &&
+      mouseY > windowHeight - height / 3 &&
+      mouseY < windowHeight
+    ) {
+      if (mainMode == true) changeMode_piano();
+      else changeMode_soundEffect();
+      sounds[mode].play();
+      sounds[mode].amp(volumeSlider.value());
+      if (musicData.length < 12) {
+        musicData.push(mode);
+        musicDataTime.push(bpmSlider.value());
+        f_musicDataIconImg();
+      }
     }
-  }
 }
 
 function mousePressed() {
@@ -320,10 +324,22 @@ function reset() {
 }
 
 function f_musicDataIconImg() {
-  if (mainMode == true){
-    image(musicDataIconImg[mode], width*0.08 + (musicData.length-1)*(width*0.065), height*0.25, width*0.05, width*0.05);
-  }else{
-    image(musicDataIconImg[mode-15], width*0.08 + (musicData.length-1)*(width*0.065), height*0.25, width*0.05, width*0.05);
+  if (mainMode == true) {
+    image(
+      musicDataIconImg[mode],
+      width * 0.08 + (musicData.length - 1) * (width * 0.065),
+      height * 0.25,
+      width * 0.05,
+      width * 0.05
+    );
+  } else {
+    image(
+      musicDataIconImg[mode],
+      width * 0.08 + (musicData.length - 1) * (width * 0.065),
+      height * 0.25,
+      width * 0.05,
+      width * 0.05
+    );
   }
 }
 
@@ -341,7 +357,6 @@ function musicPlay() {
     sounds[musicData[i]].amp(volumeSlider.value());
     sounds[musicData[i]].play(delay);
     sounds[musicData[i]].stop(delay + musicDataTime[i]);
-    console.log("play stop" + musicData[i]);
     delay = delay + musicDataTime[i];
   }
 
