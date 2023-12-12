@@ -20,6 +20,7 @@ function preload() {
   for (var i = 0; i < 57; i++) {
     if (i < 36) sounds[i] = loadSound(`sound/piano${i}.mp3`);
     else sounds[i] = loadSound(`sound/effect${i - if_effect}.mp3`);
+
   }
   // musicData 아이콘
   for (var i = 0; i < 57; i++) {
@@ -310,6 +311,8 @@ function soundPlay() {
         musicData.push(mode);
         musicDataTime.push(bpmSlider.value());
         f_musicDataIconImg();
+        console.log(musicData);
+        console.log(musicDataTime);
       }
     }
 }
@@ -369,16 +372,17 @@ function musicPlay() {
     recorder = new p5.SoundRecorder();
     // 여기에 아무것도 안넣어서 오류뜸
     recorder.setInput();
-  
     soundFile = new p5.SoundFile();
   
     recorder.record(soundFile);
-  
+    
+   
     for (let i = 0; i < musicData.length; i++) {
       sounds[musicData[i]].amp(volumeSlider.value());
       sounds[musicData[i]].play(delay);
       sounds[musicData[i]].stop(delay + musicDataTime[i]);
       delay = delay + musicDataTime[i];
+      print("played "+i);
     }
 
     recorder.stop();
