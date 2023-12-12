@@ -6,13 +6,14 @@ let sounds = [];
 let musicData = [];
 let musicDataTime = [];
 let musicDataIconImg = [];
-let keybordImg = [];
+let keyboardImg = [];
 let playImg, stopImg, resetImg, volumeImg, bpmImg, downloadImg;
 let octaveImg = [];
 let volumeSlider, bpmSlider;
 let recorder, soundFile;
 let delay = 0;
 let playing = false;
+let change = true;
 
 function preload() {
   soundFormats("mp3", "ogg");
@@ -26,7 +27,7 @@ function preload() {
   }
   // piano 위에 넣을 아이콘 - effect
   for (var i = 0; i < 21; i++) {
-    keybordImg[i] = loadImage(`pianoImg/img${i}.png`);
+    keyboardImg[i] = loadImage(`pianoImg/img${i}.png`);
   }
   // piano 위에 넣을 아이콘 - 옥타브
   for (var i = 0; i < 3; i++) {
@@ -54,6 +55,7 @@ function setup() {
   createCanvas(windowWidth, windowHeight);
   background(220);
   drawPiano();
+  f_keyboardImg()
   reset();
 
   resetButton = createImg("buttons/reset.png","");
@@ -82,13 +84,17 @@ function setup() {
   pianoButton.size(width * 0.1, height * 0.06);
   pianoButton.position(width * 0.03, height * 0.57);
   pianoButton.mousePressed(function () {
-    mainMode = true;
+    soundPlay(mainMode = true);
+    buttonChange(change = true);
+    f_keyboardImg();
   });
   effectButton = createImg("buttons/effect0.png", "");
   effectButton.size(width * 0.18, height * 0.06);
   effectButton.position(width * 0.15, height * 0.57);
   effectButton.mousePressed(function () {
-    mainMode = false;
+    soundPlay(mainMode = false);
+    buttonChange(change = false);
+    f_keyboardImg();
   });
 }
 
@@ -332,7 +338,7 @@ function f_musicDataIconImg() {
     image(
       musicDataIconImg[mode],
       width * 0.08 + (musicData.length - 1) * (width * 0.065),
-      height * 0.25,
+      height * 0.24,
       width * 0.05,
       width * 0.05
     );
@@ -340,7 +346,7 @@ function f_musicDataIconImg() {
     image(
       musicDataIconImg[mode],
       width * 0.08 + (musicData.length - 1) * (width * 0.065),
-      height * 0.25,
+      height * 0.24,
       width * 0.05,
       width * 0.05
     );
@@ -386,6 +392,29 @@ function musicPlay() {
     recorder.stop();
     for (let i = 0; i < musicData.length; i++) {
       sounds[musicData[i]].stop();
+    }
+  }
+}
+
+function buttonChange(){
+  drawPiano();
+  if (change == true){
+    pianoButton.attribute('src', 'buttons/piano1.png');
+    effectButton.attribute('src', 'buttons/effect0.png');
+  } else {
+    pianoButton.attribute('src', 'buttons/piano0.png');
+    effectButton.attribute('src', 'buttons/effect1.png');
+  }
+}
+
+function f_keyboardImg(){
+  if (change == true){
+    for (var i = 0; i < octaveImg.length; i++){
+      image(octaveImg[i], i * (width / octaveImg.length) + 7, height - height/8, width/26, height/20);
+    }
+  } else {
+    for (var i = 0; i < keyboardImg.length; i++){
+      image(keyboardImg[i], i * (width / keyboardImg.length) + 7, height - height/8, width/26, height/20)
     }
   }
 }
