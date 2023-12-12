@@ -12,6 +12,7 @@ let octaveImg = [];
 let volumeSlider, bpmSlider;
 let recorder, soundFile;
 let delay = 0;
+let playing = false;
 
 function preload() {
   soundFormats("mp3", "ogg");
@@ -55,24 +56,28 @@ function setup() {
   drawPiano();
   reset();
 
-  resetButton = createImg("buttons/reset.png");
+  resetButton = createImg("buttons/reset.png","");
   resetButton.size(width * 0.1, height * 0.06);
   resetButton.position(width * 0.87, height * 0.58);
   resetButton.mousePressed(reset);
 
-  image(volumeImg, width * 0.885, 17, width * 0.01, width * 0.01);
+  image(volumeImg, width * 0.88, 20, width * 0.015, width * 0.015);
   volumeSlider = createSlider(0, 1, 1, 0.1);
   volumeSlider.position(width * 0.9, 20);
   volumeSlider.size(width * 0.08);
 
-  image(bpmImg, width * 0.885, 58, width * 0.01, width * 0.01);
+  image(bpmImg, width * 0.88, 60, width * 0.015, width * 0.015);
   bpmSlider = createSlider(0.4, 0.8, 0.6, 0.2);
   bpmSlider.position(width * 0.9, 60);
   bpmSlider.size(width * 0.08);
 
-  musicPlayButton = createButton("PLAY");
-  musicPlayButton.position(0, 0);
-  musicPlayButton.mousePressed(musicPlay);
+  musicPlayButton = createImg("buttons/play.png", "");
+  musicPlayButton.size(width * 0.05, width * 0.05);
+  musicPlayButton.position(width * 0.91, height * 0.24);
+  musicPlayButton.mousePressed(function () {
+    if (musicData.length > 0) musicPlay();
+    if (playing == true) playButtonChange();
+  });
 
   pianoButton = createImg("buttons/piano1.png", "");
   pianoButton.size(width * 0.1, height * 0.06);
@@ -343,22 +348,45 @@ function f_musicDataIconImg() {
   }
 }
 
-function musicPlay() {
-  delay = 0;
-  recorder = new p5.SoundRecorder();
-  // 여기에 아무것도 안넣어서 오류뜸
-  recorder.setInput();
-
-  soundFile = new p5.SoundFile();
-
-  recorder.record(soundFile);
-
-  for (let i = 0; i < musicData.length; i++) {
-    sounds[musicData[i]].amp(volumeSlider.value());
-    sounds[musicData[i]].play(delay);
-    sounds[musicData[i]].stop(delay + musicDataTime[i]);
-    delay = delay + musicDataTime[i];
+function playButtonChange(){
+  if (playing == true){
+    musicPlayButton.attribute('src', 'buttons/stop.png');
+  } else{
+    musicPlayButton.attribute('src', 'buttons/play.png');
   }
+}
 
-  recorder.stop();
+function musicPlay() {
+  if (playing == false){
+    playing = true;
+    playButtonChange();
+    delay = 0;
+    recorder = new p5.SoundRecorder();
+    // 여기에 아무것도 안넣어서 오류뜸
+    recorder.setInput();
+  
+    soundFile = new p5.SoundFile();
+  
+    recorder.record(soundFile);
+  
+    for (let i = 0; i < musicData.length; i++) {
+      sounds[musicData[i]].amp(volumeSlider.value());
+      sounds[musicData[i]].play(delay);
+      sounds[musicData[i]].stop(delay + musicDataTime[i]);
+      delay = delay + musicDataTime[i];
+    }
+
+    recorder.stop();
+    // if (음악 재생이 끝났다면){
+    //   playing = false;
+    //   playButtonChange();
+    // }
+  } else{
+    playing = false;
+    playButtonChange();
+    recorder.stop();
+    for (let i = 0; i < musicData.length; i++) {
+      sounds[musicData[i]].stop();
+    }
+  }
 }
