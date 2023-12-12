@@ -362,6 +362,7 @@ function playButtonChange() {
 }
 
 function musicPlay() {
+  mode = 100;
   if (playing == false) {
     playing = true;
     playButtonChange();
