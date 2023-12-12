@@ -76,7 +76,6 @@ function setup() {
   musicPlayButton.position(width * 0.91, height * 0.24);
   musicPlayButton.mousePressed(function () {
     if (musicData.length > 0) musicPlay();
-    if (playing == true) playButtonChange();
   });
 
   pianoButton = createImg("buttons/piano1.png", "");
