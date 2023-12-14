@@ -1,13 +1,13 @@
 let mainMode = true;
 let mode = 0;
-let pianoButton, effectButton, resetButton, musicPlayButton;
+let pianoButton, effectButton, resetButton, musicPlayButton, downloadButton;
 let if_effect = 36;
 let sounds = [];
 let musicData = [];
 let musicDataTime = [];
 let musicDataIconImg = [];
 let keyboardImg = [];
-let volumeImg, bpmImg, downloadImg;
+let volumeImg, bpmImg;
 let octaveImg = [];
 let volumeSlider, bpmSlider;
 let recorder, soundFile;
@@ -86,7 +86,6 @@ function setup() {
     f_keyboardImg();
   });
 
-  // 다운로드 버튼 추가
   downloadButton = createImg("buttons/download.png", "");
   downloadButton.size(width * 0.15, height * 0.06);
   downloadButton.position(width * 0.058, height * 0.1);
@@ -316,8 +315,10 @@ function mousePressed() {
 }
 
 function mouseReleased() {
-  sounds[mode].amp(0, bpmSlider.value());
-  sounds[mode].stop(bpmSlider.value());
+  if (mode < 57){
+    sounds[mode].amp(0, bpmSlider.value());
+    sounds[mode].stop(bpmSlider.value());
+  }
 }
 
 function reset() {
@@ -330,7 +331,6 @@ function reset() {
   musicDataTime.splice(0, musicDataTime.length);
 }
 
-// 다운로드 함수
 function download() {
   soundFile.play();
   saveSound(soundFile, 'mySound');
@@ -370,12 +370,10 @@ function musicPlay() {
     playing = true;
     playButtonChange();
     delay = 0;
+
     recorder = new p5.SoundRecorder();
-    // 여기에 아무것도 안넣어서 오류뜸
     recorder.setInput();
-
     soundFile = new p5.SoundFile();
-
     recorder.record(soundFile);
 
     for (let i = 0; i < musicData.length; i++) {
@@ -383,7 +381,6 @@ function musicPlay() {
       sounds[musicData[i]].play(delay);
       sounds[musicData[i]].stop(delay + musicDataTime[i]);
       delay = delay + musicDataTime[i];
-      print("played "+i);
     }
 
     // recorder.stop();
