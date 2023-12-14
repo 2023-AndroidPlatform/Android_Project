@@ -7,7 +7,7 @@ let musicData = [];
 let musicDataTime = [];
 let musicDataIconImg = [];
 let keyboardImg = [];
-let playImg, stopImg, resetImg, volumeImg, bpmImg, downloadImg;
+let volumeImg, bpmImg, downloadImg;
 let octaveImg = [];
 let volumeSlider, bpmSlider;
 let recorder, soundFile;
@@ -331,7 +331,10 @@ function reset() {
 }
 
 // 다운로드 함수
-function download() {}
+function download() {
+  soundFile.play();
+  saveSound(soundFile, 'mySound');
+}
 
 function f_musicDataIconImg() {
   if (mainMode == true) {
@@ -383,7 +386,7 @@ function musicPlay() {
       print("played "+i);
     }
 
-    recorder.stop();
+    // recorder.stop();
     // if (음악 재생이 끝났다면){
     //   playing = false;
     //   playButtonChange();
